@@ -1,0 +1,5 @@
+Django==3.2.3
+djangorestframework>=3.12.4, <3.13.0
+psycopg2>=2.7.5, <2.8.0
+hunter>=3.3.8, <3.4.0
+clearbit>=0.1.7, <0.2.0
