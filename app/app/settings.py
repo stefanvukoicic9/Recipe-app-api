@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-x&n&!$ou&i!k%vg&=-l7_uep$cl1xi$h-8$8n6(9cgk_2(6pog'
 SECRET_KEY_HUNTER = "a178677e0bb1e5c0289e1efb2abf20036ac92fd3"
+SECRET_KEY_CLEARBIT = "sk_f275beff3d8c6b22ced1521bd3761c8b"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -37,10 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_swagger',
     'rest_framework',
     'rest_framework.authtoken',
     'core',
     'user',
+    'recipe',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +70,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {  
+                'staticfiles': 'django.templatetags.static',
+                },
         },
     },
 ]
@@ -103,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 

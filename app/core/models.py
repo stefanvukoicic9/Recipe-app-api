@@ -1,10 +1,8 @@
-from logging import exception
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
-from django.db.models.manager import EmptyManager
-
-from .check_email import check
+from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class UserManager(BaseUserManager):
 
@@ -27,6 +25,7 @@ class UserManager(BaseUserManager):
 
         return user
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     '''Custom user model that support using email instead of username'''
     email = models.EmailField(max_length=255, unique=True)
@@ -39,3 +38,63 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
     USERNAME_FIELD = 'email'
+
+
+class Owner(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    city = models.CharField(max_length=255, null=True, blank=True)
+    state = models.CharField(max_length=255, null=True, blank=True)
+    photo = models.CharField(max_length=255, null=True, blank=True)
+    linkedin = models.CharField(max_length=255, null=True, blank=True)
+    location = models.CharField(max_length=255, null=True, blank=True)
+    employment_domain = models.CharField(max_length=255, null=True, blank=True)
+    employment_name = models.CharField(max_length=255, null=True, blank=True)
+    employment_area = models.CharField(max_length=255, null=True, blank=True)
+    employment_role = models.CharField(max_length=255, null=True, blank=True)
+    employment_seniority = models.CharField(max_length=255, null=True, blank=True)
+
+
+class Ingredient(models.Model):
+    
+    name = models.CharField(max_length=255)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Recipe(models.Model):
+    """Recipe model"""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=255)
+    text = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+    ingredients = models.ManyToManyField('Ingredient')
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class RateRecipe(models.Model):
+    """Rate Recipe model"""
+    
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE
+    )
+
+    assessment = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])

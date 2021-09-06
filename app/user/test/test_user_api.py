@@ -70,7 +70,7 @@ class SiginUserApiTest(TestCase):
             'password': 'testtest'
         }
         res = self.client.post(TOKEN_URL, payload)
-        print(res, TOKEN_URL)
+        
         self.assertIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
