@@ -10,6 +10,7 @@
   ```
   
   - create super user
+  
         docker-compose run --rm app sh -c "python manage.py createsuperuser"
         
   - Import Postman collection (Recipe_app_api.postman_collection.json) into the Postman
