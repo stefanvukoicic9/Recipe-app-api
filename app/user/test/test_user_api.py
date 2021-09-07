@@ -6,7 +6,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 
 SIGN_IN_USER_URL = reverse('user:signin')
-TOKEN_URL = reverse('user:token')
+TOKEN_URL = reverse('user:login')
 
 def sigin_in_user(**param):
     return get_user_model().objects.create_user(**param)

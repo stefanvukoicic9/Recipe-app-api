@@ -6,8 +6,8 @@ class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ('id', 'name')
-        read_only_fields = ('id',) 
+        fields = ('pk', 'name')
+        read_only_fields = ('pk',) 
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -26,8 +26,8 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'name', 'text', 'price', 'ingredients', 'avg_rate')
-        read_only_fields = ('id', 'avg_rate', )
+        fields = ('pk', 'name', 'text', 'price', 'ingredients', 'avg_rate')
+        read_only_fields = ('pk', 'avg_rate', )
 
 class RecipeDitailSerializer(RecipeSerializer):
     """Serialize a recipe detail"""
@@ -38,5 +38,5 @@ class RateRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RateRecipe
-        fields = ('id', 'recipe', 'assessment',)
-        read_only_fields = ('id',)
+        fields = ('pk', 'recipe', 'assessment',)
+        read_only_fields = ('pk',)

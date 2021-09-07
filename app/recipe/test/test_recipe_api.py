@@ -104,7 +104,7 @@ class PrivateRecipeApiTest(TestCase):
         res = self.client.post(RECIPES_URL, data)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        recipe = Recipe.objects.get(id= res.data['id'])
+        recipe = Recipe.objects.get(pk= res.data['pk'])
         
         for key in data.keys():
             self.assertEqual(data[key], getattr(recipe, key))
@@ -123,7 +123,7 @@ class PrivateRecipeApiTest(TestCase):
         res = self.client.post(RECIPES_URL, data)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
-        recipe = Recipe.objects.get(id=res.data['id'])
+        recipe = Recipe.objects.get(id=res.data['pk'])
         ingredients = recipe.ingredients.all()
         self.assertEqual(len(ingredients), 2)
         self.assertIn(ingredient2, ingredients)
@@ -158,7 +158,7 @@ class PrivateRecipeApiTest(TestCase):
         recipe_obj = Recipe.objects.create(user=user2, name= 'braba', text ='sssss', price= 2)
         
         data = {
-            'recipe': recipe_obj.pk,
+            'recipe': recipe_obj.id,
             'assessment': 5
         }
         
@@ -166,5 +166,55 @@ class PrivateRecipeApiTest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
+    def test_filter_recipe_by_ingredients(self):
+        """Test filter recipe with ingredients"""
+        recipe  = sample_recipe(user=self.user, name="asdasdasdas")
+        recipe1 = sample_recipe(user=self.user, name="brbrbrbbr")
 
+        ingredient1 = sample_ingredient(user=self.user, name="cokolide")
+        ingredient2 = sample_ingredient(user=self.user, name="marmelad")
 
+        recipe.ingredients.add(ingredient1)
+
+        res = self.client.get(
+            RECIPES_URL,
+            {'ingredients': f'{ingredient1.pk},{ingredient2.pk}'}
+        )
+
+        seralizer1 = RecipeDitailSerializer(recipe)
+        seralizer2 = RecipeDitailSerializer(recipe1)
+
+        self.assertIn(seralizer1.data, res.data)
+        self.assertNotIn(seralizer2.data, res.data)
+
+    def test_filter_recipe_by_name(self):
+        """Test filter recipe with name"""
+        recipe  = sample_recipe(user=self.user, name="asdasdasdas")
+        recipe1 = sample_recipe(user=self.user, name="brbrbrbbr")
+
+        res = self.client.get(
+            RECIPES_URL,
+            {'name': 'asdasdasdas'}
+        )
+
+        seralizer1 = RecipeDitailSerializer(recipe)
+        seralizer2 = RecipeDitailSerializer(recipe1)
+
+        self.assertIn(seralizer1.data, res.data)
+        self.assertNotIn(seralizer2.data, res.data)
+
+    def test_filter_recipe_by_text(self):
+        """Test filter recipe with name"""
+        recipe  = sample_recipe(user=self.user, name="asdasdasdas", text="svesvesve")
+        recipe1 = sample_recipe(user=self.user, name="brbrbrbbr", text="svedobroje")
+
+        res = self.client.get(
+            RECIPES_URL,
+            {'text': 'svesvesve'}
+        )
+
+        seralizer1 = RecipeDitailSerializer(recipe)
+        seralizer2 = RecipeDitailSerializer(recipe1)
+
+        self.assertIn(seralizer1.data, res.data)
+        self.assertNotIn(seralizer2.data, res.data)
