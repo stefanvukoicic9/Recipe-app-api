@@ -8,7 +8,7 @@
     docker-compose run --rm app sh -c "python manage.py migrate"
     docker-compose -f docker-compose.yml up --build -d
   ```
-  - Import [Postman collection] (Recipe_app_api.postman_collection.json)
+  - Import Postman collection (Recipe_app_api.postman_collection.json) into the Postman
   
   - Test implemented endpoint
   
