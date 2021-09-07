@@ -138,8 +138,11 @@ class GetMoseUsedIngredientsTop(generics.ListAPIView):
         n = len(data)
         if n >0:
             data_qs = data[0].ingredients.all() 
-        while i < n:
-            data_qs |= data[i].ingredients.all()
-            i +=1
-            
-        return data_qs.values('name').annotate(jobtitle_count=Count('name')).order_by('-jobtitle_count')[:5]
+            while i < n:
+                data_qs |= data[i].ingredients.all()
+                i +=1
+                
+            return data_qs.values('name').annotate(jobtitle_count=Count('name')).order_by('-jobtitle_count')[:5]
+
+        else:
+            return []
